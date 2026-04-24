@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pre-Order Form</title>
-  <style>
+    <title>Pre-Order Form</title>
+    <style>
     body {
       font-family:'Times New Roman', Times, serif;
       background-color: rgb(248, 200, 233);
@@ -47,27 +47,27 @@
       margin-bottom: 10px;
       min-height: 18px;
     }
-  </style>
+    </style>
 </head>
 
 <body>
 
 <div class="container">
-  <h2>OINK! Pre-Order</h2>
+    <h2>OINK! Pre-Order</h2>
 
-  <!-- Error Message Area -->
-  <div id="errorMsg" class="error"></div>
+    <!-- Error Message Area -->
+    <div id="errorMsg" class="error"></div>
 
-  <form onsubmit="return handleOrder()">
+    <form onsubmit="return handleOrder()">
     
     <label>Name:</label>
     <input type="text" id="name">
 
     <label>Product:</label>
     <select id="variant">
-      <option value="">Select</option>
-      <option value="267">Pink (Php 267.00)</option>
-      <option value="399">Green Limited Edition (Php 399.00)</option>
+        <option value="">Select</option>
+        <option value="267">Pink (Php 267.00)</option>
+        <option value="399">Green Limited Edition (Php 399.00)</option>
     </select>
 
     <label>Quantity:</label>
@@ -75,121 +75,129 @@
 
     <label>Pickup Method:</label>
     <select id="pickup">
-      <option value="">Select</option>
-      <option value="Delivery">Delivery</option>
-      <option value="Meetup">Meetup</option>
+        <option value="">Select</option>
+        <option value="Delivery">Delivery</option>
+        <option value="Meetup">Meetup</option>
     </select>
 
     <label>Address (for delivery only):</label>
     <input type="text" id="address">
 
     <label>
-      <input type="checkbox" id="terms"> I accept terms
+        <input type="checkbox" id="terms"> I accept terms
     </label>
     <br><br>
 
     <button type="button" onclick="loadPreviousOrder()">Load Previous Order</button>
     <button type="submit">Submit</button>
 
-  </form>
+    </form>
 </div>
 
 <script>
 
-  // COOKIE FUNCTIONS
-  function setCookie(name, value, maxAge) {
-    document.cookie = name + "=" + value + ";max-age=" + maxAge;
-  }
+    // COOKIE FUNCTIONS
+    function setCookie(name, value, maxAge) {
+        document.cookie = name + "=" + value + ";max-age=" + maxAge;
+    }
 
-  function getCookie(name) {
-    let cookies = document.cookie.split("; ");
-    for (let i = 0; i < cookies.length; i++) {
-        let parts = cookies[i].split("=");
-        if (parts[0] == name) {
-        return parts[1];
+    function getCookie(name) {
+        let nameEQ = name + "=";
+        let ca = document.cookie.split("; ");
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+
+            if (c.charAt(0) == " ") {
+                return c.substring(1);
+            }
+
+            if (c.indexOf(nameEQ) == 0) {
+                return c.substring(nameEQ.length);
+            }
+        }
+        return "";
+    }
+
+    function deleteCookie(name) {
+        document.cookie = name + "=;max-age=0";
+    }
+
+    // MAIN SUBMIT HANDLER
+    function handleOrder() {
+        document.getElementById("errorMsg").innerHTML = "";
+
+        // TODO: Get values
+        let nameC = document.getElementById("name").value;
+        let product = document.getElementById("variant").value;
+        let quantity = document.getElementById("quantity").value;
+        let method = document.getElementById("pickup").value;
+        let address = document.getElementById("address").value;
+        let terms = document.getElementById("terms").checked;
+
+        // TODO: Validation
+    function validateForm(name, variant, quantity, pickup, address, terms) {
+
+        let errors = [];
+        if (nameC  == "" || product == "" || quantity == "" || method == "") {
+            errors.push("All fields must not be empty.");
+        }
+
+        if (quantity <= 0) {
+            errors.push("Quantity must be greater than 0.");
+        }
+
+        if (method == "Delivery" && address == "") {
+            errors.push("Address is required for delivery.");
+        }
+
+        if (!terms) {
+            errors.push("You must accept the terms.");
+        }
+
+        // Otherwise: Store data (cookies + localStorage)
+        if (errors.length > 0) {
+            document.getElementById("errorMsg").innerHTML = errors.join("<br>");
+            return false;
         }
     }
-    return "";
-  }
+        setCookie("customerName", nameC, 86400); // 1 day in seconds
 
-  function deleteCookie(name) {
-    document.cookie = name + "=;max-age=0";
-  }
+        // Store data in localStorage
+        localStorage.setItem("name", nameC);
+        localStorage.setItem("variant", product);
+        localStorage.setItem("quantity", quantity);
+        localStorage.setItem("pickup", method);
+        localStorage.setItem("address", address);
 
-  // MAIN SUBMIT HANDLER
-  function handleOrder() {
-    document.getElementById("errorMsg").innerHTML = "";
+        // Redirect to summary.html
+        window.location.href = "summary.html";
 
-    // TODO: Get values
-    let name = document.getElementById("name").value;
-    let product = document.getElementById("variant").value;
-    let quantity = document.getElementById("quantity").value;
-    let method = document.getElementById("pickup").value;
-    let address = document.getElementById("address").value;
-    let terms = document.getElementById("terms").checked;
-
-    // TODO: Validation
-    let errors = [];
-    if (name == "" || product == "" || quantity == "" || method == "") {
-        errors.push("All fields must not be empty.");
-    }
-
-    if (quantity <= 0) {
-        errors.push("Quantity must be greater than 0.");
-    }
-
-    if (method == "Delivery" && address == "") {
-        errors.push("Address is required for delivery.");
-    }
-
-    if (!terms) {
-        errors.push("You must accept the terms.");
-    }
-
-    // Otherwise: Store data (cookies + localStorage)
-    if (errors.length > 0) {
-        document.getElementById("errorMsg").innerHTML = errors.join("<br>");
         return false;
     }
 
-    // Store data in localStorage
-    localStorage.setItem("name", name);
-    localStorage.setItem("variant", product);
-    localStorage.setItem("quantity", quantity);
-    localStorage.setItem("pickup", method);
-    localStorage.setItem("address", address);
-
-    // Redirect to summary.html
-    window.location.href = "summary.html";
-
-    return false;
-  }
-
-  // LOAD PREVIOUS ORDER
-  function loadPreviousOrder() {
-
-    // TODO: Retrieve stored data
+    // LOAD PREVIOUS ORDER
     function loadPreviousOrder() {
-    let name = getCookie("customerName");
-    let product = localStorage.getItem("product");
-    let quantity = localStorage.getItem("quantity");
-    let method = localStorage.getItem("method");
-    let address = localStorage.getItem("address");
 
-    // TODO: If no data: Display error message "No previous order data"
-    if (!name && !product) {
-        document.getElementById("errorMsg").innerHTML = "No previous order data.";
-        return;
-    }
+        // TODO: Retrieve stored data
+        let name = getCookie("customerName");
+        let product = localStorage.getItem("variant");
+        let quantity = localStorage.getItem("quantity");
+        let method = localStorage.getItem("pickup");
+        let address = localStorage.getItem("address");
 
-    // TODO: Otherwise: Populate fields
-    document.getElementById("name").value = name;
-    document.getElementById("variant").value = product;
-    document.getElementById("quantity").value = quantity;
-    document.getElementById("pickup").value = method;
-    document.getElementById("address").value = address;
+        // TODO: If no data: Display error message "No previous order data"
+        if (!name && !product) {
+            document.getElementById("errorMsg").innerHTML = "No previous order data.";
+            return;
+        }
+
+        // TODO: Otherwise: Populate fields
+        document.getElementById("name").value = name;
+        document.getElementById("variant").value = product;
+        document.getElementById("quantity").value = quantity;
+        document.getElementById("pickup").value = method;
+        document.getElementById("address").value = address;
     }
-  }
 
 </script>
 
