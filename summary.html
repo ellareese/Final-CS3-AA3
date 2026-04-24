@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Order Summary</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      width: 500px;
+      margin: auto;
+      background: rgb(248, 200, 233);
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 50px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .container {
+      width: 450px;
+      margin: auto;
+      background: rgb(240, 153, 195);
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 50px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    #output {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+
+    </head>
+    <body>
+    <div class="container">
+    <h2>Order Summary</h2>
+
+    <div id="output"></div>
+
+    <script>
+    function getCookie(name) {
+    let cookies = document.cookie.split("; ");
+    for (let i = 0; i < cookies.length; i++) {
+        let parts = cookies[i].split("=");
+        if (parts[0] == name) {
+        return parts[1];
+        }
+    }
+    return "";
+    }
+
+    let name = getCookie("name");
+    let price = localStorage.getItem("variant"); // this is 267 or 399
+    let quantity = localStorage.getItem("quantity");
+    let method = localStorage.getItem("pickup");
+    let address = localStorage.getItem("address");
+
+    price = Number(price);
+    quantity = Number(quantity);
+
+    let total = price * quantity;
+
+    let productName = "";
+    if (price == 267) {
+    productName = "Pink";
+    } else if (price == 399) {
+    productName = "Green Limited Edition";
+    }
+
+    let text = "";
+    text += "Customer Name: " + name + "<br>";
+    text += "Product: " + productName + " (PHP " + price + ")<br>";
+    text += "Quantity: " + quantity + "<br>";
+    text += "Total Amount: PHP " + total + "<br>";
+    text += "Pickup Method: " + method + "<br>";
+
+    if (method == "Delivery") {
+    text += "Address: " + address + "<br>";
+    }
+
+    text += "<br>Thank you for your order!";
+
+    document.getElementById("output").innerHTML = text;
+    </script>
+    </div>
+    </body>
+    </html>
