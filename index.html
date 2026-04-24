@@ -109,7 +109,7 @@
             let c = ca[i];
 
             if (c.charAt(0) == " ") {
-                return c.substring(1);
+                c = c.substring(1);
             }
 
             if (c.indexOf(nameEQ) == 0) {
@@ -136,7 +136,6 @@
         let terms = document.getElementById("terms").checked;
 
         // TODO: Validation
-    function validateForm(name, variant, quantity, pickup, address, terms) {
 
         let errors = [];
         if (nameC  == "" || product == "" || quantity == "" || method == "") {
@@ -160,11 +159,11 @@
             document.getElementById("errorMsg").innerHTML = errors.join("<br>");
             return false;
         }
-    }
+    
         setCookie("customerName", nameC, 86400); // 1 day in seconds
 
         // Store data in localStorage
-        localStorage.setItem("name", nameC);
+        localStorage.setItem("customerName", nameC);
         localStorage.setItem("variant", product);
         localStorage.setItem("quantity", quantity);
         localStorage.setItem("pickup", method);
